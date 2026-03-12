@@ -1,0 +1,8 @@
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.csproj.AssemblyReference.cache
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.AssemblyInfoInputs.cache
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.AssemblyInfo.cs
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.csproj.CoreCompileInputs.cache
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\USER\BibliotecaAPI\obj\Debug\net10.0\BibliotecaAPI.MvcApplicationPartsAssemblyInfo.cache
