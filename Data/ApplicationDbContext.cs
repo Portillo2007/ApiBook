@@ -15,5 +15,7 @@ namespace BibliotecaAPI.Data
         public DbSet<Suscripcion> Suscripciones { get; set; }
 
         public DbSet<Favorito> Favoritos { get; set; }
+
+        public DbSet<HistorialLibro> HistorialLibros { get; set; }
     }
 }

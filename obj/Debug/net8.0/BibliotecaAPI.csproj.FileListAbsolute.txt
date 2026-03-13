@@ -114,3 +114,4 @@ C:\Users\USER\BibliotecaAPI\obj\Debug\net8.0\refint\BibliotecaAPI.dll
 C:\Users\USER\BibliotecaAPI\obj\Debug\net8.0\BibliotecaAPI.pdb
 C:\Users\USER\BibliotecaAPI\obj\Debug\net8.0\BibliotecaAPI.genruntimeconfig.cache
 C:\Users\USER\BibliotecaAPI\obj\Debug\net8.0\ref\BibliotecaAPI.dll
+C:\Users\USER\BibliotecaAPI\obj\Debug\net8.0\BibliotecaAPI.sourcelink.json

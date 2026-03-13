@@ -8,7 +8,6 @@ using BibliotecaAPI.Models;
 
 namespace BibliotecaAPI.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class BooksController : ControllerBase
@@ -29,27 +28,63 @@ namespace BibliotecaAPI.Controllers
             return Ok(books);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBook(int id)
+        {
+            var libro = await _gutenberg.ObtenerLibro(id);
+            if (libro == null)
+                return NotFound();
+            return Ok(libro);
+        }
+
         [Authorize]
-[HttpGet("read/{bookId}")]
-public async Task<IActionResult> LeerLibro(int bookId)
-{
-    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        [HttpGet("read/{bookId}")]
+        public async Task<IActionResult> LeerLibro(int bookId)
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(userIdClaim))
+            {
+                return Unauthorized("Usuario no autenticado");
+            }
 
-    var suscripcion = await _context.Suscripciones
-        .Where(s => s.UsuarioId == int.Parse(userId) && s.Activa)
-        .FirstOrDefaultAsync();
+            var userId = int.Parse(userIdClaim);
 
-    if (suscripcion == null)
-    {
-        return Unauthorized("Necesitas una suscripción activa para leer libros");
+            // Verificar si el usuario tiene suscripción activa O permitir acceso básico
+            var suscripcion = await _context.Suscripciones
+                .Where(s => s.UsuarioId == userId && s.Activa)
+                .FirstOrDefaultAsync();
+
+            // Permitir lectura si tiene suscripción O si es acceso básico (primeros 3 libros)
+            var librosLeidosHoy = await _context.HistorialLibros
+                .Where(h => h.UsuarioId == userId && h.FechaLectura.Date == DateTime.Today)
+                .CountAsync();
+
+            if (suscripcion == null && librosLeidosHoy >= 3)
+            {
+                return Unauthorized("Has alcanzado tu límite diario de lectura. Suscríbete para acceso ilimitado.");
+            }
+
+            var libro = await _gutenberg.ObtenerLibro(bookId);
+            if (libro == null)
+                return NotFound();
+
+            // Guardar en el historial
+            var historial = new HistorialLibro
+            {
+                UsuarioId = userId,
+                BookId = bookId,
+                Titulo = libro.Titulo,
+                Autor = libro.Autor,
+                Imagen = libro.Imagen,
+                FechaLectura = DateTime.UtcNow,
+                LinkLectura = libro.LinkLectura
+            };
+
+            _context.HistorialLibros.Add(historial);
+            await _context.SaveChangesAsync();
+
+            return Ok(libro);
+        }
     }
-
-    var libro = await _gutenberg.ObtenerLibro(bookId);
-
-    if (libro == null)
-        return NotFound();
-
-    return Ok(libro);
-}
-}
 }
