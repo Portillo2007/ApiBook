@@ -24,13 +24,37 @@ namespace BibliotecaAPI.Services
 
             foreach (var item in document.RootElement.GetProperty("results").EnumerateArray())
             {
+                // Manejar autores (puede no tener)
+                string autor = "Autor desconocido";
+                if (item.TryGetProperty("authors", out var authorsElement) && 
+                    authorsElement.GetArrayLength() > 0)
+                {
+                    autor = authorsElement[0].GetProperty("name").GetString() ?? "Autor desconocido";
+                }
+
+                // Manejar imagen (puede no tener)
+                string imagen = null;
+                if (item.TryGetProperty("formats", out var formatsElement) &&
+                    formatsElement.TryGetProperty("image/jpeg", out var imageElement))
+                {
+                    imagen = imageElement.GetString();
+                }
+
+                // Manejar link de lectura (puede no tener)
+                string linkLectura = null;
+                if (item.TryGetProperty("formats", out var formatsElement2) &&
+                    formatsElement2.TryGetProperty("text/html", out var htmlElement))
+                {
+                    linkLectura = htmlElement.GetString();
+                }
+
                 books.Add(new BookDTO
                 {
                     Id = item.GetProperty("id").GetInt32(),
-                    Titulo = item.GetProperty("title").GetString(),
-                    Autor = item.GetProperty("authors")[0].GetProperty("name").GetString(),
-                    Imagen = item.GetProperty("formats").GetProperty("image/jpeg").GetString(),
-                    LinkLectura = item.GetProperty("formats").GetProperty("text/html").GetString()
+                    Titulo = item.GetProperty("title").GetString() ?? "Sin título",
+                    Autor = autor,
+                    Imagen = imagen,
+                    LinkLectura = linkLectura
                 });
             }
 
@@ -67,15 +91,31 @@ namespace BibliotecaAPI.Services
 
     var data = JsonDocument.Parse(json).RootElement;
 
-    var titulo = data.GetProperty("title").GetString();
+    var titulo = data.GetProperty("title").GetString() ?? "Sin título";
 
-    var autor = data.GetProperty("authors")[0].GetProperty("name").GetString();
+    // Manejar autores
+    string autor = "Autor desconocido";
+    if (data.TryGetProperty("authors", out var authorsElement) && 
+        authorsElement.GetArrayLength() > 0)
+    {
+        autor = authorsElement[0].GetProperty("name").GetString() ?? "Autor desconocido";
+    }
 
-    var imagen = data.GetProperty("formats")
-        .GetProperty("image/jpeg").GetString();
+    // Manejar imagen
+    string imagen = null;
+    if (data.TryGetProperty("formats", out var formatsElement) &&
+        formatsElement.TryGetProperty("image/jpeg", out var imageElement))
+    {
+        imagen = imageElement.GetString();
+    }
 
-    var lectura = data.GetProperty("formats")
-        .GetProperty("text/html").GetString();
+    // Manejar link de lectura
+    string lectura = null;
+    if (data.TryGetProperty("formats", out var formatsElement2) &&
+        formatsElement2.TryGetProperty("text/html", out var htmlElement))
+    {
+        lectura = htmlElement.GetString();
+    }
 
     return new BookDTO
     {

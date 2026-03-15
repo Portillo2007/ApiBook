@@ -11,5 +11,7 @@ namespace BibliotecaAPI.Models
         public string Imagen { get; set; }
 
         public string LinkLectura { get; set; }
+
+        public bool Premium { get; set; } = false;
     }
 }

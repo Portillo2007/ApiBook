@@ -20,10 +20,10 @@ namespace BibliotecaAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Login(Usuario login)
+        public IActionResult Login(LoginRequest login)
         {
             var user = _context.Usuarios
-                .FirstOrDefault(u => u.Email == login.Email && u.Password == login.Password);
+                .FirstOrDefault(u => u.Email == login.correo && u.Password == login.password);
 
             if (user == null)
                 return Unauthorized("Credenciales incorrectas");
@@ -33,18 +33,34 @@ namespace BibliotecaAPI.Controllers
             return Ok(new
             {
                 token = token,
-                usuarioId = user.Id,
-                email = user.Email
+                id_usuario = user.Id,
+                nombre = user.Nombre ?? "Usuario",
+                correo = user.Email,
+                role = user.Rol ?? "FREE"
             });
         }
 
         [HttpPost("register")]
-        public IActionResult Register(Usuario usuario)
+        public IActionResult Register(LoginRequest registro)
         {
+            var usuario = new Usuario
+            {
+                Nombre = registro.correo.Split('@')[0], // Extraer nombre del email
+                Email = registro.correo,
+                Password = registro.password,
+                Rol = "FREE"
+            };
+            
             _context.Usuarios.Add(usuario);
             _context.SaveChanges();
 
-            return Ok(usuario);
+            return Ok(new
+            {
+                id = usuario.Id,
+                nombre = usuario.Nombre,
+                correo = usuario.Email,
+                rol = usuario.Rol
+            });
         }
 
         private string GenerarToken(Usuario usuario)
