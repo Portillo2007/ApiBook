@@ -125,5 +125,60 @@ namespace BibliotecaAPI.Services
         LinkLectura = lectura
     };
 }
+
+public async Task<List<string>> ObtenerCategorias()
+{
+    var response = await _http.GetAsync("https://gutendex.com/books?search=classic");
+
+    if (!response.IsSuccessStatusCode)
+        return new List<string>();
+
+    var json = await response.Content.ReadAsStringAsync();
+
+    var document = JsonDocument.Parse(json);
+
+    var categorias = new HashSet<string>();
+
+    var categoriasPermitidas = new List<string>
+    {
+        "Fiction",
+        "Love",
+        "Science fiction",
+        "Adventure stories",
+        "Detective and mystery stories",
+        "Children's literature",
+        "Poetry",
+        "Drama",
+        "History",
+        "Philosophy",
+        "Short stories",
+        "Composers",
+        "Music appreciation"
+    };
+
+    foreach (var item in document.RootElement.GetProperty("results").EnumerateArray())
+    {
+        if (item.TryGetProperty("subjects", out var subjects))
+        {
+            foreach (var subject in subjects.EnumerateArray())
+            {
+                var categoria = subject.GetString();
+
+                if (!string.IsNullOrEmpty(categoria))
+                {
+                    foreach (var permitida in categoriasPermitidas)
+                    {
+                        if (categoria.Contains(permitida))
+                        {
+                            categorias.Add(permitida);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return categorias.Take(12).ToList();
+}
     }
 }

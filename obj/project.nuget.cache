@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KR5XKByGVfs=",
+  "dgSpecHash": "+Q0zTamB998=",
   "success": true,
-  "projectFilePath": "C:\\Users\\USER\\BibliotecaAPI\\BibliotecaAPI.csproj",
+  "projectFilePath": "C:\\Users\\USER\\Downloads\\api\\ApiBook\\BibliotecaAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\USER\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\USER\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.7\\microsoft.aspnetcore.authentication.jwtbearer.8.0.7.nupkg.sha512",

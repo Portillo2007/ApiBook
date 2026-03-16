@@ -158,5 +158,11 @@ namespace BibliotecaAPI.Controllers
 
             return Ok(libro);
         }
+        [HttpGet("categories")]
+public async Task<IActionResult> GetCategories()
+{
+    var categorias = await _gutenberg.ObtenerCategorias();
+    return Ok(categorias);
+}
     }
 }
